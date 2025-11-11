@@ -127,6 +127,75 @@ endif
 .PHONY: charts
 charts: render-charts
 
+# ==========================================
+# PDF GENERATION
+# ==========================================
+
+# Preprocess markdown files for Pandoc
+.PHONY: preprocess-markdown
+preprocess-markdown: charts
+	@mkdir -p $(BUILD_DIR)/processed
+	@echo "Preprocessing markdown files..."
+	@for file in $(DOCS_DIR)/**/*.md; do \
+	  if [ -f "$$file" ]; then \
+	    outfile=$(BUILD_DIR)/processed/$$(basename $$file); \
+	    $(NODE) $(SCRIPTS_DIR)/preprocess-markdown.js "$$file" $(IMAGES_DIR) > "$$outfile"; \
+	  fi \
+	done
+	@echo "✓ Markdown preprocessed to $(BUILD_DIR)/processed/"
+
+# Generate full PDF (all content)
+.PHONY: pdf-full
+pdf-full: process-templates preprocess-markdown
+	@echo "Generating full PDF..."
+	@cat $(BUILD_DIR)/processed/*.md > $(BUILD_DIR)/merged.md
+	$(PANDOC) $(BUILD_DIR)/merged.md \
+	  -o $(PROJECT_TITLE)-full.pdf \
+	  --pdf-engine=$(PDF_ENGINE) \
+	  -H $(BUILD_DIR)/header.tex \
+	  -B $(BUILD_DIR)/title-page.tex \
+	  --number-sections \
+	  -V geometry:margin=$(PDF_MARGIN) \
+	  -V fontsize=$(PDF_FONTSIZE) \
+	  -V documentclass=$(PDF_DOCCLASS)
+	@echo "✓ Generated $(PROJECT_TITLE)-full.pdf"
+
+# Generate chapter PDF (pattern: pdf-chapter-01)
+.PHONY: pdf-chapter-%
+pdf-chapter-%: process-templates preprocess-markdown
+	@echo "Generating chapter $* PDF..."
+	@file=$$(find $(DOCS_DIR) -name "$*-*.md" -type f | head -1); \
+	if [ -z "$$file" ]; then \
+	  echo "Error: Chapter $* not found"; \
+	  exit 1; \
+	fi; \
+	outfile=$(BUILD_DIR)/processed/$$(basename $$file); \
+	$(PANDOC) "$$outfile" \
+	  -o chapter-$*.pdf \
+	  --pdf-engine=$(PDF_ENGINE) \
+	  -H $(BUILD_DIR)/header.tex \
+	  --number-sections \
+	  -V geometry:margin=$(PDF_MARGIN) \
+	  -V fontsize=$(PDF_FONTSIZE)
+	@echo "✓ Generated chapter-$*.pdf"
+
+# Generate appendices PDF
+.PHONY: pdf-appendices
+pdf-appendices: process-templates preprocess-markdown
+	@echo "Generating appendices PDF..."
+	@find $(BUILD_DIR)/processed -name "A*-*.md" -exec cat {} \; > $(BUILD_DIR)/appendices.md
+	$(PANDOC) $(BUILD_DIR)/appendices.md \
+	  -o appendices.pdf \
+	  --pdf-engine=$(PDF_ENGINE) \
+	  -H $(BUILD_DIR)/header.tex \
+	  --number-sections \
+	  -V geometry:margin=$(PDF_MARGIN) \
+	  -V fontsize=$(PDF_FONTSIZE)
+	@echo "✓ Generated appendices.pdf"
+
+.PHONY: pdf
+pdf: pdf-full
+
 # TARGET MAKE
 # ===========
 
