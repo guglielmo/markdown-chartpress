@@ -163,9 +163,9 @@ Replace logos in `assets/`:
 
 ### LaTeX Templates
 
-Templates use `{{PLACEHOLDER}}` syntax:
-- `{{{PRIMARY_COLOR_NAME}}}` → Three braces for LaTeX commands
-- `{{COMPANY_NAME}}` → Two braces for text values
+Templates use `{{ '{{' }}PLACEHOLDER{{ '}}' }}` syntax:
+- `{{ '{{{' }}PRIMARY_COLOR_NAME{{ '}}}' }}` → Three braces for LaTeX commands
+- `{{ '{{' }}COMPANY_NAME{{ '}}' }}` → Two braces for text values
 
 Processed by `make process-templates` with sed substitution.
 
