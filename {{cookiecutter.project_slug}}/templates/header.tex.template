@@ -1,6 +1,6 @@
 % Header personalizzato
 % Questo file definisce lo stile di header e footer
-
+{% raw %}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{lastpage}
@@ -62,3 +62,4 @@
 
 % Adjust spacing around images
 \setlength{\intextsep}{1.5em plus 0.5em minus 0.5em}
+{% endraw %}

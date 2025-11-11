@@ -1,7 +1,7 @@
 % ==========================================
 % PAGINA INIZIALE TEMPLATE
 % ==========================================
-
+{% raw %}
 \thispagestyle{empty}
 
 \begin{center}
@@ -38,3 +38,4 @@
 \end{center}
 
 \newpage
+{% endraw %}
