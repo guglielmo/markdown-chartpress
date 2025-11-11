@@ -7,12 +7,13 @@
   "primary_color_rgb": "0, 51, 102",
 
   "publishing_platform": [
+    "none",
     "gitlab-pages",
     "gitlab-pages-selfhosted",
-    "github-pages",
-    "none"
+    "github-pages"
   ],
 
+  "_comment_gitlab_url": "Only used if publishing_platform is 'gitlab-pages-selfhosted'",
   "gitlab_selfhosted_url": "https://gitlab.example.com",
 
   "include_pdf_download": [
@@ -32,7 +33,7 @@
   ],
 
   "initialize_git": [
-    "yes",
-    "no"
+    "no",
+    "yes"
   ]
 }
