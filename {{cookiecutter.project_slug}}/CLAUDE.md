@@ -79,7 +79,7 @@ markdown (```echarts blocks)
    - `preprocess-markdown.js`: Replaces ```echarts blocks with image references for PDF
 
 3. **PDF Layer** (`templates/`):
-   - `header.tex.template`: LaTeX header with placeholders ({{COMPANY_NAME}}, etc.)
+   - `header.tex.template`: LaTeX header with placeholders ({{ '{{' }}COMPANY_NAME{{ '}}' }}, etc.)
    - `title-page.tex.template`: Title page template with placeholders
    - Makefile: Variable substitution with sed, Pandoc invocation
 
@@ -101,7 +101,7 @@ markdown-chartpress/
 │   ├── extract-charts.js     # Chart extraction from markdown
 │   ├── preprocess-markdown.js # Chart→image replacement for PDF
 │   └── docker/               # Dockerized Puppeteer renderer
-├── templates/                # LaTeX templates with {{PLACEHOLDERS}}
+├── templates/                # LaTeX templates with {{ '{{' }}PLACEHOLDERS{{ '}}' }}
 ├── assets/                   # Logo files (logo.png, logo.svg)
 ├── Makefile                  # Build orchestration and configuration
 └── package.json              # Node.js dependencies (VitePress, Vue, ECharts)
