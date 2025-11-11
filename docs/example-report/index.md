@@ -35,4 +35,4 @@ make pdf-chapter-01
 
 ## Next Steps
 
-See [Example with Appendices](/example-with-appendices/) for a more complex document structure.
+Use this as a template for your own documentation. Add more chapters, charts, and customize the branding to match your needs.

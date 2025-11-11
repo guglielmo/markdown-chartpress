@@ -42,4 +42,4 @@ You can also embed regular images:
 
 ## Next Steps
 
-See [Example with Appendices](/example-with-appendices/) for a more complex document with appendices and multiple sections.
+Customize this template for your own documentation by following the [customization guide](/example-report/01-introduction#chart-features) and exploring different [ECharts examples](https://echarts.apache.org/examples/).
