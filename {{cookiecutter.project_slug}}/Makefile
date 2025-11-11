@@ -58,22 +58,19 @@ HAS_NODE := $(shell command -v node 2> /dev/null)
 process-templates:
 	@mkdir -p $(BUILD_DIR)
 	@echo "Processing LaTeX templates..."
-	@sed -e 's/{{{PRIMARY_COLOR_NAME}}}/{$(PRIMARY_COLOR_NAME)}/g' \
-	     -e 's/{{{PRIMARY_COLOR_RGB}}}/{$(PRIMARY_COLOR_RGB)}/g' \
-	     -e 's/{{COMPANY_NAME}}/$(COMPANY_NAME)/g' \
-	     -e 's/{{PROJECT_TITLE}}/$(PROJECT_TITLE)/g' \
-	     -e 's/{{{PROJECT_TITLE}}}/{$(PROJECT_TITLE)}/g' \
-	     -e 's/{{{PROJECT_AUTHOR}}}/{$(PROJECT_AUTHOR)}/g' \
-	     -e 's/{{{LOGO_FILE}}}/{$(ASSETS_DIR)\/$(LOGO_FILE)}/g' \
+	@sed -e 's/{% raw %}{{{PRIMARY_COLOR_NAME}}}{% endraw %}/$(PRIMARY_COLOR_NAME)/g' \
+	     -e 's/{% raw %}{{{PRIMARY_COLOR_RGB}}}{% endraw %}/$(PRIMARY_COLOR_RGB)/g' \
+	     -e 's/{% raw %}{{COMPANY_NAME}}{% endraw %}/$(COMPANY_NAME)/g' \
+	     -e 's/{% raw %}{{PROJECT_TITLE}}{% endraw %}/$(PROJECT_TITLE)/g' \
+	     -e 's/{% raw %}{{{PROJECT_AUTHOR}}}{% endraw %}/$(PROJECT_AUTHOR)/g' \
+	     -e 's/{% raw %}{{{LOGO_FILE}}}{% endraw %}/$(ASSETS_DIR)\/$(LOGO_FILE)/g' \
 	     $(TEMPLATES_DIR)/header.tex.template > $(BUILD_DIR)/header.tex
-	@sed -e 's/{{{LOGO_FILE}}}/{$(ASSETS_DIR)\/$(LOGO_FILE)}/g' \
-	     -e 's/{{{COMPANY_NAME}}}/{$(COMPANY_NAME)}/g' \
-	     -e 's/{{{PROJECT_TITLE}}}/{$(PROJECT_TITLE)}/g' \
-	     -e 's/{{COMPANY_NAME}}/$(COMPANY_NAME)/g' \
-	     -e 's/{{PROJECT_TITLE}}/$(PROJECT_TITLE)/g' \
-	     -e 's/{{PROJECT_SUBTITLE}}/$(PROJECT_SUBTITLE)/g' \
-	     -e 's/{{PROJECT_DATE}}/$(PROJECT_DATE)/g' \
-	     -e 's/{{PROJECT_AUTHOR}}/$(PROJECT_AUTHOR)/g' \
+	@sed -e 's/{% raw %}{{{LOGO_FILE}}}{% endraw %}/$(ASSETS_DIR)\/$(LOGO_FILE)/g' \
+	     -e 's/{% raw %}{{COMPANY_NAME}}{% endraw %}/$(COMPANY_NAME)/g' \
+	     -e 's/{% raw %}{{PROJECT_TITLE}}{% endraw %}/$(PROJECT_TITLE)/g' \
+	     -e 's/{% raw %}{{PROJECT_SUBTITLE}}{% endraw %}/$(PROJECT_SUBTITLE)/g' \
+	     -e 's/{% raw %}{{PROJECT_DATE}}{% endraw %}/$(PROJECT_DATE)/g' \
+	     -e 's/{% raw %}{{PROJECT_AUTHOR}}{% endraw %}/$(PROJECT_AUTHOR)/g' \
 	     $(TEMPLATES_DIR)/title-page.tex.template > $(BUILD_DIR)/title-page.tex
 	@echo "Templates processed to $(BUILD_DIR)/"
 
