@@ -7,13 +7,21 @@ import './style.css'
 // Import custom components
 import EChart from '../components/EChart.vue'
 import EChartFromCode from '../components/EChartFromCode.vue'
+import PdfDownloadButton from './components/PdfDownloadButton.vue'
 
 export default {
   extends: DefaultTheme,
+  Layout: () => {
+    return h(DefaultTheme.Layout, null, {
+      // Add PDF button to bottom of sidebar
+      'sidebar-nav-after': () => h(PdfDownloadButton)
+    })
+  },
   enhanceApp({ app, router, siteData }) {
     // Register global components
     app.component('EChart', EChart)
     app.component('EChartFromCode', EChartFromCode)
+    app.component('PdfDownloadButton', PdfDownloadButton)
   },
   setup() {
     const route = useRoute()
