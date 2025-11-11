@@ -1,0 +1,40 @@
+% ==========================================
+% PAGINA INIZIALE TEMPLATE
+% ==========================================
+
+\thispagestyle{empty}
+
+\begin{center}
+\vspace*{3cm}
+
+% Logo centrato
+\includegraphics[width=8cm]{{{LOGO_FILE}}}
+
+\vspace{1.5cm}
+
+% Nome azienda
+{\Huge \textbf{{{COMPANY_NAME}}}}
+
+\vspace{3cm}
+
+% Titolo documento
+{\LARGE \textbf{{{PROJECT_TITLE}}}}
+
+\vspace{0.5cm}
+
+% Sottotitolo
+{\Large {{PROJECT_SUBTITLE}}}
+
+\vspace{3cm}
+
+% Tabella informazioni documento
+{\large
+\begin{tabular}{rl}
+\textbf{Data:} & {{PROJECT_DATE}} \\[0.3cm]
+\textbf{Autore:} & {{PROJECT_AUTHOR}} \\[0.3cm]
+\end{tabular}
+}
+
+\end{center}
+
+\newpage
