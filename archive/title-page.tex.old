@@ -1,0 +1,48 @@
+% ==========================================
+% PAGINA INIZIALE TEMPLATE DEPP SRL
+% ==========================================
+% Questo file definisce la pagina di copertina per i documenti DEPP.
+% Viene incluso automaticamente dal Makefile con l'opzione -B (before-body).
+%
+% PERSONALIZZAZIONE:
+% Modifica i valori tra [PARENTESI QUADRE] per adattare a ogni documento.
+
+\thispagestyle{empty}
+
+\begin{center}
+\vspace*{3cm}
+
+% Logo DEPP centrato
+\includegraphics[width=8cm]{logo-depp.png}
+
+\vspace{1.5cm}
+
+% Nome azienda
+{\Huge \textbf{DEPP Srl}}
+
+\vspace{3cm}
+
+% Titolo documento (da modificare per ogni documento)
+{\LARGE \textbf{[TITOLO DEL DOCUMENTO]}}
+
+\vspace{0.5cm}
+
+% Sottotitolo (da modificare per ogni documento)
+{\Large [Sottotitolo o Descrizione Breve]}
+
+\vspace{3cm}
+
+% Tabella informazioni documento
+{\large
+\begin{tabular}{rl}
+\textbf{Data:} & [DATA] \\[0.3cm]
+\textbf{Autore:} & [NOME AUTORE, RUOLO] \\[0.3cm]
+\textbf{Destinatari:} & [Destinatario 1] \\
+                      & [Destinatario 2] \\
+                      & [Destinatario 3] \\
+\end{tabular}
+}
+
+\end{center}
+
+\newpage
