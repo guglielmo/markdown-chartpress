@@ -7,6 +7,7 @@
 import puppeteer from 'puppeteer'
 import fs from 'fs/promises'
 import path from 'path'
+import { setTimeout } from 'node:timers/promises'
 
 async function renderChartPNG(chartConfig, outputPath, width = 800, height = 600) {
   const browser = await puppeteer.launch({
@@ -39,7 +40,7 @@ async function renderChartPNG(chartConfig, outputPath, width = 800, height = 600
 
   await page.setContent(html)
   await page.waitForSelector('#chart')
-  await page.waitForTimeout(1500) // Wait for chart render
+  await setTimeout(1500) // Wait for chart render
 
   const element = await page.$('#chart')
   await element.screenshot({ path: outputPath, type: 'png' })
@@ -80,7 +81,7 @@ async function renderChartSVG(chartConfig, outputPath, width = 800, height = 600
 
   await page.setContent(html)
   await page.waitForSelector('#chart')
-  await page.waitForTimeout(1500)
+  await setTimeout(1500)
 
   const svgContent = await page.evaluate(() => {
     const svgElement = document.querySelector('#chart svg')
