@@ -21,6 +21,17 @@ def remove_dir(dirpath):
         print(f"Removed: {dirpath}")
 
 
+def rename_jinja_files():
+    """Rename .jinja files to remove the extension."""
+    for root, dirs, files in os.walk('.'):
+        for filename in files:
+            if filename.endswith('.jinja'):
+                old_path = os.path.join(root, filename)
+                new_path = os.path.join(root, filename[:-6])  # Remove .jinja
+                os.rename(old_path, new_path)
+                print(f"Renamed: {old_path} → {new_path}")
+
+
 def main():
     """Clean up files based on cookiecutter choices."""
 
@@ -29,7 +40,10 @@ def main():
     starter_content = "{{ cookiecutter.starter_content }}"
     initialize_git = "{{ cookiecutter.initialize_git }}"
 
-    print("Running post-generation cleanup...")
+    print("Running post-generation processing...")
+
+    # Rename .jinja template files
+    rename_jinja_files()
 
     # Remove GitLab CI if not using GitLab
     if publishing_platform not in ["gitlab-pages", "gitlab-pages-selfhosted"]:
