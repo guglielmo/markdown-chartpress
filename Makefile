@@ -71,6 +71,26 @@ process-templates:
 	     $(TEMPLATES_DIR)/title-page.tex.template > $(BUILD_DIR)/title-page.tex
 	@echo "Templates processed to $(BUILD_DIR)/"
 
+# ==========================================
+# DOCKER CHART RENDERER
+# ==========================================
+
+DOCKER_IMAGE := markdown-chartpress/renderer
+DOCKER_TAG := latest
+
+.PHONY: docker-build-renderer
+docker-build-renderer:
+	@echo "Building Docker chart renderer image..."
+	cd $(SCRIPTS_DIR)/docker && $(DOCKER) build -t $(DOCKER_IMAGE):$(DOCKER_TAG) .
+	@echo "✓ Docker image built: $(DOCKER_IMAGE):$(DOCKER_TAG)"
+
+.PHONY: docker-test-renderer
+docker-test-renderer:
+	@echo "Testing Docker renderer..."
+	@echo '{"file":"test.md","charts":[{"id":"test","config":"{title:{text:\"Test\"},series:[{data:[1,2,3],type:\"line\"}]}","format":"svg","width":800,"height":600}]}' > /tmp/test-manifest.json
+	$(DOCKER) run --rm -v /tmp:/workspace $(DOCKER_IMAGE):$(DOCKER_TAG) render /workspace/test-manifest.json /workspace svg
+	@echo "✓ Check /tmp/test.svg"
+
 # TARGET MAKE
 # ===========
 
