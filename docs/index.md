@@ -86,12 +86,11 @@ Charts render interactively in VitePress, statically in PDFs.
 - `make pdf-chapter-01` - Individual chapter
 - `make pdf-appendices` - Appendices only
 
-## Examples
+## Example
 
-Explore the example documentation:
+Explore the example business report:
 
-- [Simple Report](/example-report/) - Basic document with charts
-- [Complex Document](/example-with-appendices/) - Multi-chapter with appendices
+- [Example Business Report](/example-report/) - Comprehensive report with 6 chapters, 9+ charts, and 3 appendices
 
 ## Documentation
 

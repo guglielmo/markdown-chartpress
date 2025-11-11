@@ -76,7 +76,7 @@ export default defineConfig({
 
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/example-report/' }
+      { text: 'Example', link: '/example-report/' }
     ],
 
     sidebar: {
