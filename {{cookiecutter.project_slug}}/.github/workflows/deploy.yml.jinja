@@ -1,0 +1,124 @@
+# GitHub Actions workflow for {{cookiecutter.project_title}}
+# Generated from markdown-chartpress cookiecutter template
+
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # Build VitePress site
+  build-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build VitePress site
+        run: npm run docs:build
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitepress-dist
+          path: docs/.vitepress/dist
+          retention-days: 1
+
+{% if cookiecutter.include_pdf_download == 'yes' %}
+  # Build PDF document
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex make
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build Docker chart renderer
+        run: make docker-build-renderer
+
+      - name: Generate PDF
+        run: make pdf-full
+
+      - name: Prepare PDF artifact
+        run: |
+          mkdir -p pdf-artifact
+          cp .build/{{cookiecutter.project_slug}}.pdf pdf-artifact/
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf
+          path: pdf-artifact
+          retention-days: 1
+{% endif %}
+
+  # Deploy to GitHub Pages
+  deploy:
+    needs:
+      - build-site
+{% if cookiecutter.include_pdf_download == 'yes' %}
+      - build-pdf
+{% endif %}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: {% raw %}${{ steps.deployment.outputs.page_url }}{% endraw %}
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vitepress-dist
+          path: dist
+
+{% if cookiecutter.include_pdf_download == 'yes' %}
+      - name: Download PDF artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pdf
+          path: dist/downloads
+{% endif %}
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
