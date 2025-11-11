@@ -1,0 +1,3 @@
+# Keep template assets, but users can override
+# assets/logo.png
+# assets/logo.svg
