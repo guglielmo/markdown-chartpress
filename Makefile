@@ -232,3 +232,85 @@ build: charts site pdf-full
 # Target di default: full build
 .PHONY: all
 all: build
+
+# ==========================================
+# UTILITIES
+# ==========================================
+
+.PHONY: clean
+clean:
+	@echo "Cleaning build artifacts..."
+	rm -rf $(BUILD_DIR)
+	rm -rf $(IMAGES_DIR)
+	rm -rf $(TIMESTAMPS_DIR)
+	rm -rf $(DOCS_DIR)/.vitepress/dist
+	rm -rf $(DOCS_DIR)/.vitepress/cache
+	rm -f *.pdf
+	@echo "✓ Clean complete"
+
+.PHONY: check
+check:
+	@echo "Checking dependencies..."
+	@command -v $(PANDOC) >/dev/null 2>&1 || echo "  ✗ pandoc not found"
+	@command -v $(PDF_ENGINE) >/dev/null 2>&1 || echo "  ✗ xelatex not found"
+	@command -v $(NODE) >/dev/null 2>&1 || echo "  ✗ node not found"
+	@command -v $(DOCKER) >/dev/null 2>&1 || echo "  ✗ docker not found"
+	@command -v npm >/dev/null 2>&1 || echo "  ✗ npm not found"
+	@test -d node_modules || echo "  ✗ node_modules not found (run npm install)"
+	@echo "✓ Dependency check complete"
+
+.PHONY: info
+info:
+	@echo "markdown-chartpress Configuration:"
+	@echo "=================================="
+	@echo "Project: $(PROJECT_TITLE)"
+	@echo "Company: $(COMPANY_NAME)"
+	@echo "Author: $(PROJECT_AUTHOR)"
+	@echo ""
+	@echo "Directories:"
+	@echo "  Docs: $(DOCS_DIR)"
+	@echo "  Images: $(IMAGES_DIR)"
+	@echo "  Build: $(BUILD_DIR)"
+	@echo ""
+	@echo "PDF Config:"
+	@echo "  Chart format: $(CHART_FORMAT)"
+	@echo "  Margin: $(PDF_MARGIN)"
+	@echo "  Font size: $(PDF_FONTSIZE)"
+	@echo ""
+	@echo "Tools:"
+	@echo "  Docker: $(if $(HAS_DOCKER),✓ available,✗ not found)"
+	@echo "  Node.js: $(if $(HAS_NODE),✓ available,✗ not found)"
+
+.PHONY: help
+help:
+	@echo "markdown-chartpress - Makefile Targets"
+	@echo "======================================"
+	@echo ""
+	@echo "Development:"
+	@echo "  make dev              Start VitePress dev server"
+	@echo "  make preview          Preview built site"
+	@echo ""
+	@echo "Building:"
+	@echo "  make build            Full production build (site + PDF + charts)"
+	@echo "  make site             Build VitePress static site only"
+	@echo "  make pdf-full         Generate complete PDF"
+	@echo "  make pdf-chapter-XX   Generate specific chapter PDF"
+	@echo "  make pdf-appendices   Generate appendices PDF"
+	@echo ""
+	@echo "Charts:"
+	@echo "  make charts           Extract and render all charts"
+	@echo "  make extract-charts   Extract chart definitions only"
+	@echo "  make render-charts    Render extracted charts"
+	@echo ""
+	@echo "Docker:"
+	@echo "  make docker-build-renderer  Build chart renderer Docker image"
+	@echo "  make docker-test-renderer   Test Docker renderer"
+	@echo ""
+	@echo "Utilities:"
+	@echo "  make clean            Remove all build artifacts"
+	@echo "  make check            Check dependencies"
+	@echo "  make info             Show current configuration"
+	@echo "  make help             Show this help"
+	@echo ""
+	@echo "Configuration:"
+	@echo "  Edit Makefile variables at top of file to customize"
