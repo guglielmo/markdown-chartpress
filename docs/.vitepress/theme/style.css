@@ -1,0 +1,33 @@
+/**
+ * Custom styles for markdown-chartpress
+ */
+
+/* Heading numbers styling */
+.heading-number {
+  color: var(--vp-c-brand-1);
+  font-weight: bold;
+  margin-right: 0.5em;
+}
+
+/* Chart wrapper spacing */
+.chart-wrapper {
+  margin: 2rem 0;
+}
+
+.chart-title {
+  margin-bottom: 0.5rem;
+  color: var(--vp-c-text-1);
+}
+
+.chart-description {
+  margin-bottom: 1rem;
+  color: var(--vp-c-text-2);
+  font-size: 0.9em;
+}
+
+/* EChart container */
+.echart-container {
+  background: var(--vp-c-bg-soft);
+  border-radius: 8px;
+  padding: 1rem;
+}
