@@ -45,13 +45,14 @@ make pdf-full
 - Make
 - Pandoc 2+
 - XeLaTeX (from texlive-xetex package)
+- librsvg2-bin (provides rsvg-convert for SVG to PDF conversion)
 
 **Optional (but recommended):**
 - Docker (for chart rendering)
 
 **Install on Ubuntu/Debian:**
 ```bash
-sudo apt-get install pandoc texlive-xetex make
+sudo apt-get install pandoc texlive-xetex librsvg2-bin make
 curl -fsSL https://get.docker.com | sh
 ```
 

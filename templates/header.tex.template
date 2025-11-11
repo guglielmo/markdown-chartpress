@@ -17,13 +17,13 @@
 \fancyhead[L]{\includegraphics[height=0.8cm]{{{LOGO_FILE}}}\hspace{0.3cm}\textbf{\color{{{PRIMARY_COLOR_NAME}}}{{COMPANY_NAME}}}}
 
 % Header destro: titolo documento
-\fancyhead[R]{\small\textit{\color{{{PRIMARY_COLOR_NAME}}}\@title}}
+\fancyhead[R]{\small\textit{\color{{{PRIMARY_COLOR_NAME}}}{{PROJECT_TITLE}}}}
 
 % Footer centro: numero pagina
 \fancyfoot[C]{\small Pagina \thepage\ di \pageref{LastPage}}
 
 % Footer destro: autore
-\fancyfoot[R]{\small\textit{\@author}}
+\fancyfoot[R]{\small\textit{{{PROJECT_AUTHOR}}}}
 
 % Linea separatrice header e footer
 \renewcommand{\headrulewidth}{0.5pt}
@@ -33,13 +33,17 @@
 \fancypagestyle{plain}{%
   \fancyhf{}%
   \fancyfoot[C]{\small Pagina \thepage\ di \pageref{LastPage}}
-  \fancyfoot[R]{\small\textit{\@author}}
+  \fancyfoot[R]{\small\textit{{{PROJECT_AUTHOR}}}}
   \renewcommand{\headrulewidth}{0pt}%
   \renewcommand{\footrulewidth}{0.5pt}%
 }
 
 % Stile per le sezioni
 \usepackage{titlesec}
+
+% Force new page before each section (chapter)
+\newcommand{\sectionbreak}{\clearpage}
+
 \titleformat{\section}
   {\color{{{PRIMARY_COLOR_NAME}}}\Large\bfseries}
   {\thesection}
@@ -51,3 +55,10 @@
   {\thesubsection}
   {1em}
   {}
+
+% Add vertical space before images (for better chart positioning)
+\usepackage{etoolbox}
+\AtBeginEnvironment{figure}{\vspace{1em}}
+
+% Adjust spacing around images
+\setlength{\intextsep}{1.5em plus 0.5em minus 0.5em}

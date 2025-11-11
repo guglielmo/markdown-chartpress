@@ -99,7 +99,7 @@ Market opportunity varies significantly by region:
   "series": [{
     "type": "pie",
     "radius": ["40%", "70%"],
-    "avoidLabelOverlap": false,
+    "center": ["50%", "50%"],
     "itemStyle": {
       "borderRadius": 10,
       "borderColor": "#fff",
@@ -120,7 +120,11 @@ Market opportunity varies significantly by region:
     },
     "label": {
       "show": true,
-      "formatter": "{b}\n€{c}M"
+      "formatter": "{b}: €{c}M",
+      "fontSize": 13
+    },
+    "labelLine": {
+      "show": true
     }
   }]
 }

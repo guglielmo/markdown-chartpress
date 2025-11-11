@@ -29,7 +29,31 @@ async function renderChartPNG(chartConfig, outputPath, width = 800, height = 600
       <script>
         const chart = echarts.init(document.getElementById('chart'));
         try {
-          chart.setOption(${chartConfig});
+          const config = ${chartConfig};
+
+          // Fix title positioning to prevent truncation
+          if (config.title && !config.title.top) {
+            config.title.top = 30;  // Explicit pixel value to avoid truncation
+          }
+
+          // Ensure proper grid padding for titles and legends
+          if (!config.grid) {
+            config.grid = {};
+          }
+          if (!config.grid.top) {
+            config.grid.top = config.title ? '18%' : '10%';
+          }
+          if (!config.grid.bottom) {
+            config.grid.bottom = config.legend ? '15%' : '10%';
+          }
+          if (!config.grid.left) {
+            config.grid.left = '10%';
+          }
+          if (!config.grid.right) {
+            config.grid.right = '10%';
+          }
+
+          chart.setOption(config);
         } catch (e) {
           console.error('Chart error:', e);
         }
@@ -70,7 +94,31 @@ async function renderChartSVG(chartConfig, outputPath, width = 800, height = 600
           renderer: 'svg'
         });
         try {
-          chart.setOption(${chartConfig});
+          const config = ${chartConfig};
+
+          // Fix title positioning to prevent truncation
+          if (config.title && !config.title.top) {
+            config.title.top = 30;  // Explicit pixel value to avoid truncation
+          }
+
+          // Ensure proper grid padding for titles and legends
+          if (!config.grid) {
+            config.grid = {};
+          }
+          if (!config.grid.top) {
+            config.grid.top = config.title ? '18%' : '10%';
+          }
+          if (!config.grid.bottom) {
+            config.grid.bottom = config.legend ? '15%' : '10%';
+          }
+          if (!config.grid.left) {
+            config.grid.left = '10%';
+          }
+          if (!config.grid.right) {
+            config.grid.right = '10%';
+          }
+
+          chart.setOption(config);
         } catch (e) {
           console.error('Chart error:', e);
         }

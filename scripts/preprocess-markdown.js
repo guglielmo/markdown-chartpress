@@ -9,10 +9,127 @@ import fs from 'fs/promises'
 import crypto from 'crypto'
 
 /**
+ * Replace Unicode characters that LaTeX fonts don't support
+ */
+function replaceUnicodeCharacters(text) {
+  // Replace emoji with text equivalents
+  const emojiReplacements = {
+    '✅': '[YES]',
+    '❌': '[NO]',
+    '⚠️': '[WARNING]',
+    '⚠': '[WARNING]',
+    '️': '', // Variant selector
+    '✓': '[✓]',
+    '✗': '[✗]',
+  }
+
+  // Replace mathematical symbols
+  const mathReplacements = {
+    '≥': '>=',
+    '≤': '<=',
+    '≠': '!=',
+    '≈': '~=',
+    '×': 'x',
+    '÷': '/',
+  }
+
+  // Replace box-drawing characters with simple alternatives
+  const boxDrawingReplacements = {
+    '┌': '+',
+    '┐': '+',
+    '└': '+',
+    '┘': '+',
+    '├': '+',
+    '┤': '+',
+    '┬': '+',
+    '┴': '+',
+    '┼': '+',
+    '─': '-',
+    '│': '|',
+    '═': '=',
+    '║': '|',
+    '▼': 'v',
+    '▲': '^',
+    '►': '>',
+    '◄': '<',
+  }
+
+  let result = text
+
+  // Apply emoji replacements
+  for (const [unicode, replacement] of Object.entries(emojiReplacements)) {
+    result = result.replace(new RegExp(unicode, 'g'), replacement)
+  }
+
+  // Apply mathematical symbol replacements
+  for (const [unicode, replacement] of Object.entries(mathReplacements)) {
+    result = result.replace(new RegExp(unicode, 'g'), replacement)
+  }
+
+  // Apply box-drawing replacements
+  for (const [unicode, replacement] of Object.entries(boxDrawingReplacements)) {
+    result = result.replace(new RegExp(unicode.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), replacement)
+  }
+
+  return result
+}
+
+/**
+ * Remove YAML frontmatter from markdown content
+ */
+function removeFrontmatter(content) {
+  // Check if content starts with frontmatter delimiter
+  if (!content.trim().startsWith('---')) {
+    return content
+  }
+
+  const lines = content.split('\n')
+  let inFrontmatter = false
+  let frontmatterEnded = false
+  const output = []
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+
+    // First line with ---
+    if (i === 0 && line.trim() === '---') {
+      inFrontmatter = true
+      continue
+    }
+
+    // Second --- ends frontmatter
+    if (inFrontmatter && line.trim() === '---') {
+      inFrontmatter = false
+      frontmatterEnded = true
+      continue
+    }
+
+    // Skip lines inside frontmatter
+    if (inFrontmatter) {
+      continue
+    }
+
+    // Keep everything after frontmatter
+    if (frontmatterEnded || !inFrontmatter) {
+      output.push(line)
+    }
+  }
+
+  return output.join('\n')
+}
+
+/**
  * Process a single markdown file
  */
 async function preprocessMarkdown(filePath, imagesDir) {
-  const content = await fs.readFile(filePath, 'utf-8')
+  let content = await fs.readFile(filePath, 'utf-8')
+
+  // Remove YAML frontmatter first
+  content = removeFrontmatter(content)
+
+  // Replace Unicode characters
+  content = replaceUnicodeCharacters(content)
+
   const lines = content.split('\n')
   const output = []
 

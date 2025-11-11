@@ -57,12 +57,17 @@ HAS_NODE := $(shell command -v node 2> /dev/null)
 process-templates:
 	@mkdir -p $(BUILD_DIR)
 	@echo "Processing LaTeX templates..."
-	@sed -e 's/{{{PRIMARY_COLOR_NAME}}}/$(PRIMARY_COLOR_NAME)/g' \
-	     -e 's/{{{PRIMARY_COLOR_RGB}}}/$(PRIMARY_COLOR_RGB)/g' \
+	@sed -e 's/{{{PRIMARY_COLOR_NAME}}}/{$(PRIMARY_COLOR_NAME)}/g' \
+	     -e 's/{{{PRIMARY_COLOR_RGB}}}/{$(PRIMARY_COLOR_RGB)}/g' \
 	     -e 's/{{COMPANY_NAME}}/$(COMPANY_NAME)/g' \
-	     -e 's/{{{LOGO_FILE}}}/$(ASSETS_DIR)\/$(LOGO_FILE)/g' \
+	     -e 's/{{PROJECT_TITLE}}/$(PROJECT_TITLE)/g' \
+	     -e 's/{{{PROJECT_TITLE}}}/{$(PROJECT_TITLE)}/g' \
+	     -e 's/{{{PROJECT_AUTHOR}}}/{$(PROJECT_AUTHOR)}/g' \
+	     -e 's/{{{LOGO_FILE}}}/{$(ASSETS_DIR)\/$(LOGO_FILE)}/g' \
 	     $(TEMPLATES_DIR)/header.tex.template > $(BUILD_DIR)/header.tex
-	@sed -e 's/{{{LOGO_FILE}}}/$(ASSETS_DIR)\/$(LOGO_FILE)/g' \
+	@sed -e 's/{{{LOGO_FILE}}}/{$(ASSETS_DIR)\/$(LOGO_FILE)}/g' \
+	     -e 's/{{{COMPANY_NAME}}}/{$(COMPANY_NAME)}/g' \
+	     -e 's/{{{PROJECT_TITLE}}}/{$(PROJECT_TITLE)}/g' \
 	     -e 's/{{COMPANY_NAME}}/$(COMPANY_NAME)/g' \
 	     -e 's/{{PROJECT_TITLE}}/$(PROJECT_TITLE)/g' \
 	     -e 's/{{PROJECT_SUBTITLE}}/$(PROJECT_SUBTITLE)/g' \
@@ -150,7 +155,7 @@ pdf-full: process-templates preprocess-markdown
 	@echo "Generating full PDF..."
 	@cat $(BUILD_DIR)/processed/*.md > $(BUILD_DIR)/merged.md
 	$(PANDOC) $(BUILD_DIR)/merged.md \
-	  -o $(PROJECT_TITLE)-full.pdf \
+	  -o "$(PROJECT_TITLE)-full.pdf" \
 	  --pdf-engine=$(PDF_ENGINE) \
 	  -H $(BUILD_DIR)/header.tex \
 	  -B $(BUILD_DIR)/title-page.tex \
@@ -253,6 +258,7 @@ check:
 	@echo "Checking dependencies..."
 	@command -v $(PANDOC) >/dev/null 2>&1 || echo "  ✗ pandoc not found"
 	@command -v $(PDF_ENGINE) >/dev/null 2>&1 || echo "  ✗ xelatex not found"
+	@command -v rsvg-convert >/dev/null 2>&1 || echo "  ✗ rsvg-convert not found (install librsvg2-bin)"
 	@command -v $(NODE) >/dev/null 2>&1 || echo "  ✗ node not found"
 	@command -v $(DOCKER) >/dev/null 2>&1 || echo "  ✗ docker not found"
 	@command -v npm >/dev/null 2>&1 || echo "  ✗ npm not found"
