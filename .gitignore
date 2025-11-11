@@ -1,3 +1,39 @@
-# Keep template assets, but users can override
-# assets/logo.png
-# assets/logo.svg
+# Node modules
+node_modules/
+
+# Build outputs
+dist/
+.build/
+*.pdf
+
+# Generated charts
+images/
+
+# Timestamp tracking
+.timestamps/
+
+# VitePress cache
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+
+# LaTeX temporary files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
