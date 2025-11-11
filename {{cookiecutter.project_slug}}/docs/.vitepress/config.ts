@@ -55,8 +55,8 @@ function generateSidebarItems(dirPath: string, baseLink: string) {
 }
 
 export default defineConfig({
-  title: 'markdown-chartpress',
-  description: 'Professional documentation with interactive charts and PDF generation',
+  title: '{{cookiecutter.project_title}}',
+  description: 'Professional documentation with interactive charts and PDF export',
   base: '/',
   lang: 'en-US',
 
@@ -68,6 +68,13 @@ export default defineConfig({
   themeConfig: {
     logo: '/logo.svg',
     siteTitle: 'Documentation',
+
+    // PDF Download configuration
+    pdfDownload: {
+      enabled: {{cookiecutter.include_pdf_download === 'yes' | lower}},
+      url: '/downloads/{{cookiecutter.project_slug}}.pdf',
+      label: 'Scarica PDF'
+    },
 
     outline: {
       level: [2, 4],
