@@ -6,9 +6,10 @@
 
 # PROJECT CONFIGURATION
 # ---------------------
-PROJECT_TITLE := Professional Documentation
-COMPANY_NAME := Your Company
-PROJECT_AUTHOR := Documentation Team
+PROJECT_TITLE := {{cookiecutter.project_title}}
+COMPANY_NAME := {{cookiecutter.company_name}}
+PROJECT_AUTHOR := {{cookiecutter.author_name}}
+PROJECT_SLUG := {{cookiecutter.project_slug}}
 PROJECT_DATE := $(shell date +%Y-%m-%d)
 
 # BRANDING
@@ -16,8 +17,8 @@ PROJECT_DATE := $(shell date +%Y-%m-%d)
 LOGO_FILE := logo.png
 LOGO_SVG := logo.svg
 PRIMARY_COLOR_NAME := primarycolor
-PRIMARY_COLOR_RGB := 0, 51, 102
-PRIMARY_COLOR_HEX := 003366
+PRIMARY_COLOR_RGB := {{cookiecutter.primary_color_rgb}}
+PRIMARY_COLOR_HEX := {{cookiecutter.primary_color_hex}}
 
 # DIRECTORIES
 # -----------
@@ -31,7 +32,7 @@ TIMESTAMPS_DIR := .timestamps
 
 # PDF CONFIGURATION
 # -----------------
-CHART_FORMAT := svg
+CHART_FORMAT := {{cookiecutter.chart_format}}
 PDF_MARGIN := 2.5cm
 PDF_FONTSIZE := 11pt
 PDF_DOCCLASS := article
@@ -155,7 +156,7 @@ pdf-full: process-templates preprocess-markdown
 	@echo "Generating full PDF..."
 	@cat $(BUILD_DIR)/processed/*.md > $(BUILD_DIR)/merged.md
 	$(PANDOC) $(BUILD_DIR)/merged.md \
-	  -o "$(PROJECT_TITLE)-full.pdf" \
+	  -o $(BUILD_DIR)/$(PROJECT_SLUG).pdf \
 	  --pdf-engine=$(PDF_ENGINE) \
 	  -H $(BUILD_DIR)/header.tex \
 	  -B $(BUILD_DIR)/title-page.tex \
@@ -163,7 +164,7 @@ pdf-full: process-templates preprocess-markdown
 	  -V geometry:margin=$(PDF_MARGIN) \
 	  -V fontsize=$(PDF_FONTSIZE) \
 	  -V documentclass=$(PDF_DOCCLASS)
-	@echo "✓ Generated $(PROJECT_TITLE)-full.pdf"
+	@echo "✓ Generated $(PROJECT_SLUG).pdf in $(BUILD_DIR)/"
 
 # Generate chapter PDF (pattern: pdf-chapter-01)
 .PHONY: pdf-chapter-%
@@ -211,6 +212,16 @@ dev:
 	@echo "Interactive charts will render in browser"
 	$(VITEPRESS) dev $(DOCS_DIR)
 
+# Development server with PDF available
+.PHONY: dev-with-pdf
+dev-with-pdf: pdf-full
+	@echo "Copying PDF to dist for dev server..."
+	@mkdir -p $(DOCS_DIR)/.vitepress/dist/downloads
+	@cp $(BUILD_DIR)/$(PROJECT_SLUG).pdf $(DOCS_DIR)/.vitepress/dist/downloads/
+	@echo "PDF available at /downloads/$(PROJECT_SLUG).pdf"
+	@echo "Starting development server..."
+	$(VITEPRESS) dev $(DOCS_DIR)
+
 .PHONY: site
 site:
 	@echo "Building VitePress static site..."
@@ -228,7 +239,7 @@ build: charts site pdf-full
 	@echo ""
 	@echo "✓ Full build complete!"
 	@echo "  - Static site: $(DOCS_DIR)/.vitepress/dist/"
-	@echo "  - PDF: $(PROJECT_TITLE)-full.pdf"
+	@echo "  - PDF: $(BUILD_DIR)/$(PROJECT_SLUG).pdf"
 	@echo "  - Charts: $(IMAGES_DIR)/"
 
 # TARGET MAKE
