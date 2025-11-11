@@ -88,15 +88,6 @@ export default defineConfig({
             '/example-report/'
           )
         }
-      ],
-      '/example-with-appendices/': [
-        {
-          text: 'Example with Appendices',
-          items: generateSidebarItems(
-            join(__dirname, '../example-with-appendices'),
-            '/example-with-appendices/'
-          )
-        }
       ]
     },
 
