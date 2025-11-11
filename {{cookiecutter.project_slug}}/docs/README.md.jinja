@@ -1,0 +1,71 @@
+# Documentation Structure
+
+This directory contains your VitePress documentation source files.
+
+## Folder Organization
+
+{% if cookiecutter.starter_content == 'empty' %}
+Create your documentation in organized folders. Each folder represents a separate documentation section or project.
+
+**Example structure:**
+```
+docs/
+├── user-guide/
+│   ├── index.md
+│   ├── 01-getting-started.md
+│   └── 02-advanced-features.md
+├── api-reference/
+│   ├── index.md
+│   └── 01-endpoints.md
+└── index.md
+```
+
+{% else %}
+### The `example/` Folder
+
+{% if cookiecutter.starter_content == 'example-full' %}
+This folder contains a **complete example documentation** with 6 chapters, 3 appendices, 2 ECharts visualizations, and formatting examples.
+
+**To start your own documentation:**
+- **Option A:** Delete `example/` and create your own folder
+- **Option B:** Rename `example/` to your docs name
+- **Option C:** Keep `example/` as reference and create additional folders
+
+{% elif cookiecutter.starter_content == 'example-minimal' %}
+This folder contains a **minimal skeleton** with 3 starter chapters and one sample chart.
+
+**To start your own documentation:**
+- **Option A:** Edit files in `example/` with your content
+- **Option B:** Delete and create your own structure
+
+{% endif %}
+{% endif %}
+
+## Chapter Numbering
+
+Files with numeric prefixes get auto-numbered:
+- `01-introduction.md` → "1. Introduction"
+- `02-architecture.md` → "2. Architecture"
+- `A1-glossary.md` → "A1. Glossary" (appendices)
+
+## Build Commands
+
+```bash
+make dev              # Dev server
+make dev-with-pdf     # Dev server with PDF
+make build            # Full build (site + PDF)
+make pdf-full         # PDF only
+make charts           # Extract and render charts
+```
+
+## Publishing
+
+{% if cookiecutter.publishing_platform == 'gitlab-pages' %}
+**GitLab Pages** - Push to `main` triggers deployment to `https://<username>.gitlab.io/{{cookiecutter.project_slug}}/`
+{% elif cookiecutter.publishing_platform == 'github-pages' %}
+**GitHub Pages** - Push to `main` triggers deployment to `https://<username>.github.io/{{cookiecutter.project_slug}}/`
+{% else %}
+**Manual** - Run `make build` and deploy `docs/.vitepress/dist/`
+{% endif %}
+
+See root README for complete documentation.
