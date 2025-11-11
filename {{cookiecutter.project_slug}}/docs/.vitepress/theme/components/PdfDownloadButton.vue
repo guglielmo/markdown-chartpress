@@ -1,4 +1,4 @@
-<template>
+{% raw %}<template>
   <div v-if="config.enabled" class="pdf-download">
     <a :href="config.url" class="pdf-link" download>
       <svg class="icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
@@ -65,3 +65,4 @@ const config = theme.value.pdfDownload || { enabled: false, url: '', label: 'Dow
   }
 }
 </style>
+{% endraw %}

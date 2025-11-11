@@ -1,4 +1,4 @@
-<template>
+{% raw %}<template>
   <div class="chart-wrapper">
     <h3 v-if="title" class="chart-title">{{ title }}</h3>
     <p v-if="description" class="chart-description">{{ description }}</p>
@@ -80,3 +80,4 @@ function handleResize() {
   border-radius: 8px;
 }
 </style>
+{% endraw %}

@@ -1,7 +1,7 @@
-<template>
-  <div class="chart-from-code-wrapper">
+{% raw %}<template>
+  <div class="chart-from-code">
     <EChart
-      :option="parsedOption"
+      :option="option"
       :height="height"
       :width="width"
       :theme="theme"
@@ -25,19 +25,16 @@ const props = withDefaults(defineProps<{
   theme: 'light'
 })
 
-const parsedOption = computed<EChartsOption>(() => {
+const option = computed<EChartsOption>(() => {
   try {
-    // The code prop contains the chart configuration as a string
-    // It can be either JSON or JavaScript object notation
-    // We need to evaluate it safely
-    const evalCode = `(${props.code})`
-    return eval(evalCode)
-  } catch (error) {
-    console.error('Error parsing chart code:', error)
+    return JSON.parse(props.code)
+  } catch (e) {
+    console.error('Failed to parse ECharts option:', e)
     return {
       title: {
-        text: 'Chart Error',
-        subtext: 'Failed to parse chart configuration'
+        text: 'Invalid Chart Configuration',
+        left: 'center',
+        top: 'middle'
       }
     }
   }
@@ -45,7 +42,8 @@ const parsedOption = computed<EChartsOption>(() => {
 </script>
 
 <style scoped>
-.chart-from-code-wrapper {
+.chart-from-code {
   margin: 1rem 0;
 }
 </style>
+{% endraw %}
