@@ -1,0 +1,74 @@
+# GitLab CI/CD Pipeline for {{cookiecutter.project_title}}
+# Generated from markdown-chartpress cookiecutter template
+
+image: node:18
+
+stages:
+  - build
+  - deploy
+
+# Cache node_modules for faster builds
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - node_modules/
+
+# Build VitePress static site
+build-site:
+  stage: build
+  script:
+    - npm ci
+    - npm run docs:build
+  artifacts:
+    paths:
+      - docs/.vitepress/dist
+    expire_in: 1 hour
+
+{% if cookiecutter.include_pdf_download == 'yes' %}
+# Build PDF document with charts
+build-pdf:
+  stage: build
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    # Install build dependencies
+    - apk add --no-cache make pandoc texlive-xetex nodejs npm python3 py3-pip
+  script:
+    - npm ci
+    # Build Docker renderer for charts
+    - make docker-build-renderer
+    # Generate PDF
+    - make pdf-full
+    # Prepare PDF for deployment
+    - mkdir -p docs/.vitepress/dist/downloads
+    - cp .build/{{cookiecutter.project_slug}}.pdf docs/.vitepress/dist/downloads/
+  artifacts:
+    paths:
+      - docs/.vitepress/dist/downloads
+    expire_in: 1 hour
+  # Run independently from build-site
+  dependencies: []
+{% endif %}
+
+# Deploy to GitLab Pages
+pages:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - mv docs/.vitepress/dist public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
+  dependencies:
+    - build-site
+{% if cookiecutter.include_pdf_download == 'yes' %}
+    - build-pdf
+{% endif %}
