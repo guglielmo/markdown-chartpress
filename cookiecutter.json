@@ -1,0 +1,38 @@
+{
+  "project_title": "Professional Documentation",
+  "project_slug": "{{ cookiecutter.project_title.lower().replace(' ', '-').replace('_', '-') }}",
+  "company_name": "Your Company",
+  "author_name": "Documentation Team",
+  "primary_color_hex": "003366",
+  "primary_color_rgb": "0, 51, 102",
+
+  "publishing_platform": [
+    "gitlab-pages",
+    "gitlab-pages-selfhosted",
+    "github-pages",
+    "none"
+  ],
+
+  "gitlab_selfhosted_url": "https://gitlab.example.com",
+
+  "include_pdf_download": [
+    "yes",
+    "no"
+  ],
+
+  "starter_content": [
+    "example-full",
+    "example-minimal",
+    "empty"
+  ],
+
+  "chart_format": [
+    "svg",
+    "png"
+  ],
+
+  "initialize_git": [
+    "yes",
+    "no"
+  ]
+}
