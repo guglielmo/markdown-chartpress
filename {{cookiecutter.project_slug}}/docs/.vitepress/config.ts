@@ -83,16 +83,16 @@ export default defineConfig({
 
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Example', link: '/example-report/' }
+      { text: 'Example', link: '/example/' }
     ],
 
     sidebar: {
-      '/example-report/': [
+      '/example/': [
         {
-          text: 'Example Report',
+          text: 'Example Documentation',
           items: generateSidebarItems(
-            join(__dirname, '../example-report'),
-            '/example-report/'
+            join(__dirname, '../example'),
+            '/example/'
           )
         }
       ]
