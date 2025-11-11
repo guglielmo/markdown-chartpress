@@ -71,7 +71,7 @@ export default defineConfig({
 
     // PDF Download configuration
     pdfDownload: {
-      enabled: {{cookiecutter.include_pdf_download === 'yes' | lower}},
+      enabled: {% if cookiecutter.include_pdf_download == 'yes' %}true{% else %}false{% endif %},
       url: '/downloads/{{cookiecutter.project_slug}}.pdf',
       label: 'Scarica PDF'
     },
