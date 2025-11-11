@@ -1,0 +1,36 @@
+{
+  "name": "markdown-chartpress",
+  "version": "1.0.0",
+  "description": "Professional documentation template with VitePress (interactive charts) and PDF (static images) generation",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "keywords": [
+    "vitepress",
+    "documentation",
+    "pdf",
+    "echarts",
+    "markdown",
+    "pandoc"
+  ],
+  "author": "Guglielmo Celata",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guglielmo/markdown-chartpress.git"
+  },
+  "dependencies": {
+    "vitepress": "^1.0.0",
+    "vue": "^3.4.0",
+    "echarts": "^5.5.0"
+  },
+  "devDependencies": {
+    "markdown-it-task-lists": "^2.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
