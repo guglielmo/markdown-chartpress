@@ -91,6 +91,42 @@ docker-test-renderer:
 	$(DOCKER) run --rm -v /tmp:/workspace $(DOCKER_IMAGE):$(DOCKER_TAG) render /workspace/test-manifest.json /workspace svg
 	@echo "✓ Check /tmp/test.svg"
 
+# ==========================================
+# CHART RENDERING
+# ==========================================
+
+MANIFEST_FILE := $(BUILD_DIR)/charts-manifest.json
+
+.PHONY: extract-charts
+extract-charts:
+	@mkdir -p $(BUILD_DIR)
+	@echo "Extracting charts from $(DOCS_DIR)..."
+	$(NODE) $(SCRIPTS_DIR)/extract-charts.js $(DOCS_DIR) $(MANIFEST_FILE)
+
+.PHONY: render-charts
+render-charts: extract-charts
+	@echo "Rendering charts..."
+ifdef HAS_DOCKER
+	@echo "Using Docker renderer..."
+	$(DOCKER) run --rm \
+	  -v $(PWD)/$(BUILD_DIR):/workspace/build \
+	  -v $(PWD)/$(IMAGES_DIR):/workspace/images \
+	  $(DOCKER_IMAGE):$(DOCKER_TAG) \
+	  render /workspace/build/charts-manifest.json /workspace/images $(CHART_FORMAT)
+else ifdef HAS_NODE
+	@echo "Docker not found, using local Node.js..."
+	@test -d node_modules/puppeteer && \
+	  $(NODE) $(SCRIPTS_DIR)/docker/render-chart.js $(MANIFEST_FILE) $(IMAGES_DIR) $(CHART_FORMAT) || \
+	  (echo "Error: puppeteer not installed. Run 'npm install puppeteer' or use Docker"; exit 1)
+else
+	@echo "Error: Neither Docker nor Node.js found"
+	@exit 1
+endif
+	@echo "✓ Charts rendered to $(IMAGES_DIR)/"
+
+.PHONY: charts
+charts: render-charts
+
 # TARGET MAKE
 # ===========
 
