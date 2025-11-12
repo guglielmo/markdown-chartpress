@@ -162,6 +162,10 @@ pdf-full: process-templates preprocess-markdown
 	  -V fontsize=$(PDF_FONTSIZE) \
 	  -V documentclass=$(PDF_DOCCLASS)
 	@echo "✓ Generated $(PROJECT_SLUG).pdf in $(BUILD_DIR)/"
+	@echo "Copying PDF to public directory..."
+	@mkdir -p $(DOCS_DIR)/public/downloads
+	@cp $(BUILD_DIR)/$(PROJECT_SLUG).pdf $(DOCS_DIR)/public/downloads/
+	@echo "✓ PDF available at /downloads/$(PROJECT_SLUG).pdf"
 
 # Generate chapter PDF (pattern: pdf-chapter-01)
 .PHONY: pdf-chapter-%
@@ -233,14 +237,11 @@ preview: site
 # Full production build
 .PHONY: build
 build: charts site pdf-full
-	@echo "Copying PDF to dist directory..."
-	@mkdir -p $(DOCS_DIR)/.vitepress/dist/downloads
-	@cp $(BUILD_DIR)/$(PROJECT_SLUG).pdf $(DOCS_DIR)/.vitepress/dist/downloads/
 	@echo ""
 	@echo "✓ Full build complete!"
 	@echo "  - Static site: $(DOCS_DIR)/.vitepress/dist/"
 	@echo "  - PDF: $(BUILD_DIR)/$(PROJECT_SLUG).pdf"
-	@echo "  - PDF (web): $(DOCS_DIR)/.vitepress/dist/downloads/$(PROJECT_SLUG).pdf"
+	@echo "  - PDF (web): $(DOCS_DIR)/public/downloads/$(PROJECT_SLUG).pdf"
 	@echo "  - Charts: $(IMAGES_DIR)/"
 
 # TARGET MAKE

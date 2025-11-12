@@ -16,6 +16,9 @@ images/
 docs/.vitepress/cache/
 docs/.vitepress/dist/
 
+# Generated PDF for web serving
+docs/public/downloads/
+
 # LaTeX temporary files
 *.aux
 *.log
