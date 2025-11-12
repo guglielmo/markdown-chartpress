@@ -10,7 +10,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /example-report/
+      link: /example/
     - theme: alt
       text: View on GitHub
       link: https://github.com/guglielmo/markdown-chartpress
@@ -90,7 +90,7 @@ Charts render interactively in VitePress, statically in PDFs.
 
 Explore the example business report:
 
-- [Example Business Report](/example-report/) - Comprehensive report with 6 chapters, 9+ charts, and 3 appendices
+- [Example Business Report](/example/) - Comprehensive report with 6 chapters, 9+ charts, and 3 appendices
 
 ## Documentation
 

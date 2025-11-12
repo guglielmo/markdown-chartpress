@@ -194,4 +194,4 @@ To adapt this example for your own documentation:
 
 This template provides a foundation for creating professional business reports with interactive visualizations. The combination of VitePress for web presentation and Pandoc/LaTeX for PDF generation offers flexibility while maintaining consistent branding and quality.
 
-For technical details on how charts are extracted, rendered, and processed, see [Appendix A1: Methodology](/example-report/A1-methodology).
+For technical details on how charts are extracted, rendered, and processed, see [Appendix A1: Methodology](/example/A1-methodology).

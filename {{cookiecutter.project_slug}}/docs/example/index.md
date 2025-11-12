@@ -20,39 +20,39 @@ This report showcases a complete business analysis including:
 
 ### Main Chapters
 
-- [**1. Executive Summary**](/example-report/01-executive-summary) - Key findings and strategic recommendations with revenue overview chart
+- [**1. Executive Summary**](/example/01-executive-summary) - Key findings and strategic recommendations with revenue overview chart
 
-- [**2. Market Analysis**](/example-report/02-market-analysis) - Market trends, regional distribution, and competitive landscape
+- [**2. Market Analysis**](/example/02-market-analysis) - Market trends, regional distribution, and competitive landscape
   - Multi-series line chart (market growth)
   - Donut chart (regional distribution)
   - Stacked bar chart (market segmentation)
 
-- [**3. Financial Projections**](/example-report/03-financial-projections) - Revenue forecasts, cost structure, and profitability analysis
+- [**3. Financial Projections**](/example/03-financial-projections) - Revenue forecasts, cost structure, and profitability analysis
   - Bar + line combination (revenue vs. costs)
   - Stacked bar chart (cost breakdown)
   - Line chart with markings (cash flow)
   - Multi-scenario analysis
 
-- [**4. Operational Metrics**](/example-report/04-operational-metrics) - KPIs, team performance, and operational efficiency
+- [**4. Operational Metrics**](/example/04-operational-metrics) - KPIs, team performance, and operational efficiency
   - Gauge charts (KPI dashboards)
   - Multi-axis charts (customer acquisition metrics)
   - Line charts (system performance)
 
-- [**5. Risk Assessment**](/example-report/05-risk-assessment) - Risk identification, impact analysis, and mitigation strategies
+- [**5. Risk Assessment**](/example/05-risk-assessment) - Risk identification, impact analysis, and mitigation strategies
   - Scatter plot (risk matrix)
   - Line chart (risk trends)
   - Pie chart (risk categories)
   - Bar chart (mitigation investment)
 
-- [**6. Conclusions and Next Steps**](/example-report/06-conclusions) - Summary, recommendations, and action plan
+- [**6. Conclusions and Next Steps**](/example/06-conclusions) - Summary, recommendations, and action plan
 
 ### Appendices
 
-- [**Appendix A1: Methodology**](/example-report/A1-methodology) - Technical methodology and chart rendering pipeline
+- [**Appendix A1: Methodology**](/example/A1-methodology) - Technical methodology and chart rendering pipeline
 
-- [**Appendix A2: Data Sources**](/example-report/A2-data-sources) - Primary and secondary data sources used in this report
+- [**Appendix A2: Data Sources**](/example/A2-data-sources) - Primary and secondary data sources used in this report
 
-- [**Appendix A3: Glossary**](/example-report/A3-glossary) - Definitions of key terms, acronyms, and abbreviations
+- [**Appendix A3: Glossary**](/example/A3-glossary) - Definitions of key terms, acronyms, and abbreviations
 
 ## Chart Types Demonstrated
 
@@ -232,7 +232,7 @@ See [ECharts Examples](https://echarts.apache.org/examples/) for inspiration.
 - Docker (optional, for chart rendering)
 - Make (build automation)
 
-See [Appendix A1: Methodology](/example-report/A1-methodology) for detailed technical documentation.
+See [Appendix A1: Methodology](/example/A1-methodology) for detailed technical documentation.
 
 ## Next Steps
 
