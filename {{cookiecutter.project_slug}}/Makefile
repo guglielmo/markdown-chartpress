@@ -233,10 +233,14 @@ preview: site
 # Full production build
 .PHONY: build
 build: charts site pdf-full
+	@echo "Copying PDF to dist directory..."
+	@mkdir -p $(DOCS_DIR)/.vitepress/dist/downloads
+	@cp $(BUILD_DIR)/$(PROJECT_SLUG).pdf $(DOCS_DIR)/.vitepress/dist/downloads/
 	@echo ""
 	@echo "✓ Full build complete!"
 	@echo "  - Static site: $(DOCS_DIR)/.vitepress/dist/"
 	@echo "  - PDF: $(BUILD_DIR)/$(PROJECT_SLUG).pdf"
+	@echo "  - PDF (web): $(DOCS_DIR)/.vitepress/dist/downloads/$(PROJECT_SLUG).pdf"
 	@echo "  - Charts: $(IMAGES_DIR)/"
 
 # TARGET MAKE
