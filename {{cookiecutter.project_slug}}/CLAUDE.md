@@ -5,10 +5,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Overview
 
 markdown-chartpress is a professional documentation template with dual output formats:
-- **VitePress Site**: Interactive documentation with ECharts visualizations
-- **PDF Documents**: Professional exports with static chart images via Pandoc + XeLaTeX
+- **VitePress Site**: Interactive documentation with ECharts visualizations and Mermaid diagrams
+- **PDF Documents**: Professional exports with static chart/diagram images via Pandoc + XeLaTeX
 
-Built on: VitePress 1.0, Vue 3, ECharts 5, Puppeteer (Docker), Pandoc, XeLaTeX
+Built on: VitePress 1.0, Vue 3, ECharts 5, Mermaid 11, Puppeteer (Docker), mermaid-cli, Pandoc, XeLaTeX
 
 ## Build Commands
 
@@ -69,14 +69,18 @@ markdown (```echarts blocks)
 
 1. **VitePress Layer** (`docs/.vitepress/`):
    - `config.ts`: Site configuration with dynamic sidebar generation
-   - `theme/index.ts`: Custom theme with automatic heading numbering
-   - `components/EChart.vue`: Interactive chart component
+   - `theme/index.ts`: Custom theme with automatic heading numbering + Mermaid initialization
+   - `components/EChart.vue`: Interactive ECharts component
    - `plugins/echarts-plugin.ts`: Markdown plugin to transform ```echarts blocks
+   - `plugins/mermaid-plugin.ts`: Markdown plugin to transform ```mermaid blocks
 
-2. **Chart Rendering** (`scripts/`):
+2. **Chart & Diagram Rendering** (`scripts/`):
    - `extract-charts.js`: Parses markdown, extracts ```echarts blocks to JSON manifest
-   - `docker/render-chart.js`: Puppeteer script to render charts as SVG/PNG
+   - `extract-mermaid.js`: Parses markdown, extracts ```mermaid blocks to .mmd files
+   - `render-mermaid.sh`: Renders .mmd files to SVG/PNG via mermaid-cli
+   - `docker/render-chart.js`: Puppeteer script to render ECharts as SVG/PNG
    - `preprocess-markdown.js`: Replaces ```echarts blocks with image references for PDF
+   - `preprocess-mermaid.js`: Replaces ```mermaid blocks with PNG image references for PDF
 
 3. **PDF Layer** (`templates/`):
    - `header.tex.template`: LaTeX header with placeholders ({{ '{{' }}COMPANY_NAME{{ '}}' }}, etc.)
@@ -143,6 +147,31 @@ Use ```echarts code blocks:
 **Rendering:**
 - VitePress: Transformed to `<EChartFromCode>` Vue component (interactive)
 - PDF: Extracted, rendered to SVG/PNG by Puppeteer, replaced with `![](images/id.svg)`
+
+### Embedding Mermaid Diagrams
+
+Use ```mermaid code blocks:
+```markdown
+\`\`\`mermaid
+graph TD
+    A[Start] --> B[Process]
+    B --> C{Decision}
+    C -->|Yes| D[End]
+    C -->|No| B
+\`\`\`
+```
+
+**Diagram Types Supported:**
+- Flowcharts, sequence diagrams, class diagrams, state diagrams, ER diagrams, user journeys, Gantt charts, pie charts, and more
+
+**Rendering:**
+- VitePress: Rendered client-side with Mermaid.js (interactive)
+- PDF: Extracted, rendered to SVG (for website) and PNG (for PDF) by mermaid-cli, replaced with `![](images/mermaid-id.png)`
+
+**Why PNG for PDF:**
+- SVG with `foreignObject` (HTML embedded) not supported by XeLaTeX
+- PNG has text "baked in" as raster (better compatibility)
+- SVG still generated for website (transparent background)
 
 ## Customization
 
@@ -228,6 +257,22 @@ make charts                 # Extract and render
 npm install puppeteer       # Install locally
 make charts                 # Uses local Puppeteer
 ```
+
+### Mermaid Diagram Rendering
+
+Mermaid diagrams are rendered automatically:
+```bash
+make mermaid                # Extract and render all Mermaid diagrams
+# or
+make extract-mermaid        # Extract only
+make render-mermaid         # Render to SVG/PNG
+```
+
+**Output:**
+- SVG files (for website): Transparent background, optimal for web
+- PNG files (for PDF): White background, 1200px width, text embedded
+
+**Note:** Requires `@mermaid-js/mermaid-cli` installed (happens automatically with `npm install`)
 
 ## Common Workflows
 

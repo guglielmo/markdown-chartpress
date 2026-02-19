@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { echartsPlugin } from './plugins/echarts-plugin'
+import { mermaidPlugin } from './plugins/mermaid-plugin'
 import { readdirSync, readFileSync, statSync } from 'fs'
 import { join } from 'path'
 import taskLists from 'markdown-it-task-lists'
@@ -129,6 +130,7 @@ export default defineConfig({
     },
     config: (md) => {
       md.use(echartsPlugin)
+      md.use(mermaidPlugin)
       md.use(taskLists, { enabled: true })
     }
   }

@@ -3,6 +3,7 @@ import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { useRoute } from 'vitepress'
 import './style.css'
+import mermaid from 'mermaid'
 
 // Import custom components
 import EChart from '../components/EChart.vue'
@@ -22,6 +23,16 @@ export default {
     app.component('EChart', EChart)
     app.component('EChartFromCode', EChartFromCode)
     app.component('PdfDownloadButton', PdfDownloadButton)
+
+    // Initialize mermaid
+    if (typeof window !== 'undefined') {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'neutral',
+        securityLevel: 'loose',
+        fontFamily: 'sans-serif'
+      })
+    }
   },
   setup() {
     const route = useRoute()
@@ -115,6 +126,11 @@ export default {
     onMounted(() => {
       addHeadingNumbers()
 
+      // Initialize Mermaid diagrams
+      nextTick(() => {
+        mermaid.run()
+      })
+
       // Watch for DOM changes
       const observer = new MutationObserver(() => {
         const docElement = document.querySelector('.vp-doc')
@@ -137,6 +153,11 @@ export default {
 
     watch(() => route.path, () => {
       addHeadingNumbers()
+
+      // Re-render Mermaid diagrams on route change
+      nextTick(() => {
+        mermaid.run()
+      })
     })
   }
 } satisfies Theme

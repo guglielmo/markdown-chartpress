@@ -131,18 +131,46 @@ endif
 charts: render-charts
 
 # ==========================================
+# MERMAID DIAGRAM RENDERING
+# ==========================================
+
+MERMAID_MANIFEST := $(BUILD_DIR)/mermaid-manifest.json
+MERMAID_DIR := $(BUILD_DIR)/mermaid-diagrams
+
+.PHONY: extract-mermaid
+extract-mermaid:
+	@mkdir -p $(BUILD_DIR)
+	@echo "Extracting Mermaid diagrams from $(DOCS_DIR)..."
+	$(NODE) $(SCRIPTS_DIR)/extract-mermaid.js
+
+.PHONY: render-mermaid
+render-mermaid: extract-mermaid
+	@echo "Rendering Mermaid diagrams to SVG and PNG..."
+	@mkdir -p $(DOCS_DIR)/public/$(IMAGES_DIR)
+	@bash $(SCRIPTS_DIR)/render-mermaid.sh
+	@echo "✓ Mermaid diagrams rendered to $(DOCS_DIR)/public/$(IMAGES_DIR)/"
+
+.PHONY: mermaid
+mermaid: render-mermaid
+
+# ==========================================
 # PDF GENERATION
 # ==========================================
 
 # Preprocess markdown files for Pandoc
 .PHONY: preprocess-markdown
-preprocess-markdown: charts
+preprocess-markdown: charts mermaid
 	@mkdir -p $(BUILD_DIR)/processed
+	@mkdir -p $(BUILD_DIR)/temp
 	@echo "Preprocessing markdown files..."
 	@for file in $(DOCS_DIR)/**/*.md; do \
 	  if [ -f "$$file" ]; then \
-	    outfile=$(BUILD_DIR)/processed/$$(basename $$file); \
-	    $(NODE) $(SCRIPTS_DIR)/preprocess-markdown.js "$$file" $(IMAGES_DIR) > "$$outfile"; \
+	    basename=$$(basename "$$file"); \
+	    tempfile=$(BUILD_DIR)/temp/$$basename; \
+	    outfile=$(BUILD_DIR)/processed/$$basename; \
+	    echo "  Processing $$basename..."; \
+	    $(NODE) $(SCRIPTS_DIR)/preprocess-mermaid.js "$$file" "$$tempfile"; \
+	    $(NODE) $(SCRIPTS_DIR)/preprocess-markdown.js "$$tempfile" $(IMAGES_DIR) > "$$outfile"; \
 	  fi \
 	done
 	@echo "✓ Markdown preprocessed to $(BUILD_DIR)/processed/"
@@ -155,6 +183,7 @@ pdf-full: process-templates preprocess-markdown
 	$(PANDOC) $(BUILD_DIR)/merged.md \
 	  -o $(BUILD_DIR)/$(PROJECT_SLUG).pdf \
 	  --pdf-engine=$(PDF_ENGINE) \
+	  --resource-path=$(DOCS_DIR)/public \
 	  -H $(BUILD_DIR)/header.tex \
 	  -B $(BUILD_DIR)/title-page.tex \
 	  --number-sections \
@@ -320,6 +349,11 @@ help:
 	@echo "  make charts           Extract and render all charts"
 	@echo "  make extract-charts   Extract chart definitions only"
 	@echo "  make render-charts    Render extracted charts"
+	@echo ""
+	@echo "Mermaid Diagrams:"
+	@echo "  make mermaid          Extract and render all Mermaid diagrams"
+	@echo "  make extract-mermaid  Extract Mermaid definitions only"
+	@echo "  make render-mermaid   Render extracted Mermaid diagrams to SVG/PNG"
 	@echo ""
 	@echo "Docker:"
 	@echo "  make docker-build-renderer  Build chart renderer Docker image"
