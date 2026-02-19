@@ -173,6 +173,34 @@ graph TD
 - PNG has text "baked in" as raster (better compatibility)
 - SVG still generated for website (transparent background)
 
+### Code Block Handling in PDF
+
+Long code blocks are automatically configured to wrap lines in the PDF output:
+
+**Automatic Line Wrapping:**
+- Uses `fvextra` LaTeX package for intelligent line breaking
+- Long lines break at natural points with continuation symbol (↪)
+- Smaller font size for better fit within margins
+- Syntax highlighting preserved
+
+**Configuration:**
+The LaTeX template (`templates/header.tex.template`) defines two verbatim environments:
+- `Highlighting`: For syntax-highlighted code blocks (from Pandoc)
+- `verbatim`: For plain code blocks
+
+Both environments use:
+- `breaklines`: Enable line breaking
+- `breakanywhere`: Allow breaks anywhere in long lines
+- `breaksymbol`: Visual indicator (↪) for wrapped lines
+- `fontsize=\small`: Slightly smaller font for verbatim
+
+**No Author Action Required:**
+Code blocks work out of the box - no special directives needed. Simply use standard markdown code fences:
+
+\`\`\`python
+very_long_line_of_code_that_would_extend_beyond_the_page_margin_will_automatically_wrap()
+\`\`\`
+
 ## Customization
 
 ### Branding (Makefile variables)
