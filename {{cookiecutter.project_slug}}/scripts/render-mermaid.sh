@@ -28,7 +28,7 @@ TOTAL=$(find "$MERMAID_DIR" -name "*.mmd" 2>/dev/null | wc -l)
 if [ "$TOTAL" -eq 0 ]; then
     echo "⚠️  No .mmd files found in $MERMAID_DIR"
     echo "   Run 'node scripts/extract-mermaid.js' first"
-    exit 1
+    exit 0
 fi
 
 echo "   Found $TOTAL diagram(s) to render"
