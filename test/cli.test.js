@@ -35,3 +35,21 @@ test('mkpress build moves md files and produces html/', { timeout: 120000 }, () 
 
   rmSync(tmpDir, { recursive: true, force: true })
 })
+
+test('mkpress build is idempotent (re-run on already-initialized dir)', { timeout: 120000 }, () => {
+  const tmpDir = '/tmp/mkpress-idem-test'
+  rmSync(tmpDir, { recursive: true, force: true })
+  mkdirSync(`${tmpDir}/md`, { recursive: true })
+  writeFileSync(`${tmpDir}/md/index.md`, '# Re-run Test\nHello')
+  writeFileSync(`${tmpDir}/md/01-page.md`, '# Page\nContent')
+
+  // First run
+  execFileSync('node', [`${PKG_ROOT}/bin/mkpress.js`, tmpDir], { stdio: 'inherit' })
+  // Second run — must not error
+  execFileSync('node', [`${PKG_ROOT}/bin/mkpress.js`, tmpDir], { stdio: 'inherit' })
+
+  assert.ok(existsSync(`${tmpDir}/html/index.html`), 'html/index.html must exist after second run')
+  assert.ok(!existsSync(`${tmpDir}/md/.vitepress`), '.vitepress must be cleaned up after second run')
+
+  rmSync(tmpDir, { recursive: true, force: true })
+})
