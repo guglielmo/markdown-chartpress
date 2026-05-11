@@ -27,18 +27,22 @@ function extractTitle(content: string): string | undefined {
 }
 
 function generateSidebarItems(dir: string, base: string) {
-  return readdirSync(dir)
-    .filter(f => f.endsWith('.md') && f !== 'index.md' && statSync(join(dir, f)).isFile())
-    .sort()
-    .map(f => {
-      const title = extractTitle(readFileSync(join(dir, f), 'utf-8'))
-      const m = f.match(/^(\d+)-/)
-      const n = m ? parseInt(m[1], 10) : null
-      return {
-        text: n ? `${n}. ${title ?? f.replace('.md', '')}` : (title ?? f.replace('.md', '')),
-        link: base + f.replace('.md', '')
-      }
-    })
+  try {
+    return readdirSync(dir)
+      .filter(f => f.endsWith('.md') && f !== 'index.md' && statSync(join(dir, f)).isFile())
+      .sort()
+      .map(f => {
+        const title = extractTitle(readFileSync(join(dir, f), 'utf-8'))
+        const m = f.match(/^(\d+)-/)
+        const n = m ? parseInt(m[1], 10) : null
+        return {
+          text: n ? `${n}. ${title ?? f.replace('.md', '')}` : (title ?? f.replace('.md', '')),
+          link: base + f.replace('.md', '')
+        }
+      })
+  } catch {
+    return []
+  }
 }
 
 function siteTitle(): string {
