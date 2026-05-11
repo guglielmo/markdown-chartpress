@@ -1,11 +1,19 @@
 #!/usr/bin/env node
 import { resolve, join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
 import { readdirSync, mkdirSync, renameSync, rmSync, existsSync, lstatSync, symlinkSync, unlinkSync, writeFileSync, readFileSync } from 'fs'
 import { build } from 'vitepress'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PKG_ROOT = resolve(__dirname, '..')
+
+// Find the node_modules directory that actually contains our deps.
+// npm may hoist deps above the package dir (e.g. in npx cache), so
+// PKG_ROOT/node_modules may be empty. We resolve vitepress to locate
+// the correct node_modules at runtime.
+const _req = createRequire(import.meta.url)
+const NODE_MODULES = dirname(dirname(_req.resolve('vitepress/package.json')))
 
 function extractH1(filePath) {
   try {
@@ -72,7 +80,7 @@ async function main() {
     // Remove any stale entry (broken symlink from a previous crashed run)
     try { unlinkSync(nmLink) } catch { rmSync(nmLink, { recursive: true, force: true }) }
   }
-  symlinkSync(join(PKG_ROOT, 'node_modules'), nmLink, 'dir')
+  symlinkSync(NODE_MODULES, nmLink, 'dir')
   const nmLinkCreated = true
 
   console.log(`Building ${mdDir} → ${htmlDir}`)
