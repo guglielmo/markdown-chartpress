@@ -1,0 +1,36 @@
+{
+  "name": "markdown-chartpress",
+  "version": "1.1.0",
+  "description": "CLI to build VitePress static sites from markdown directories",
+  "type": "module",
+  "bin": {
+    "mkpress": "./bin/mkpress.js"
+  },
+  "files": [
+    "bin/",
+    ".vitepress/",
+    "{{cookiecutter.project_slug}}/",
+    "cookiecutter.json",
+    "hooks/"
+  ],
+  "dependencies": {
+    "vitepress": "^1.6.0",
+    "vue": "^3.4.0",
+    "echarts": "^5.5.0",
+    "mermaid": "^11.0.0",
+    "markdown-it-task-lists": "^2.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "test": "node --test test/cli.test.js"
+  },
+  "keywords": ["vitepress", "documentation", "markdown", "cli", "echarts"],
+  "author": "Guglielmo Celata",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guglielmo/markdown-chartpress.git"
+  }
+}
