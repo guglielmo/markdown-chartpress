@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { resolve, join, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { readdirSync, mkdirSync, renameSync, rmSync, existsSync, symlinkSync, unlinkSync } from 'fs'
+import { readdirSync, mkdirSync, renameSync, rmSync, existsSync, lstatSync, symlinkSync, unlinkSync } from 'fs'
 import { build } from 'vitepress'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -44,10 +44,14 @@ async function main() {
   // Symlink node_modules into targetDir so VitePress can resolve deps
   // (Rollup resolves imports relative to the page file location)
   const nmLink = join(targetDir, 'node_modules')
-  const nmLinkCreated = !existsSync(nmLink)
-  if (nmLinkCreated) {
-    symlinkSync(join(PKG_ROOT, 'node_modules'), nmLink, 'dir')
+  // lstatSync detects broken symlinks that existsSync would miss
+  const nmLinkExists = (() => { try { lstatSync(nmLink); return true } catch { return false } })()
+  if (nmLinkExists) {
+    // Remove any stale entry (broken symlink from a previous crashed run)
+    try { unlinkSync(nmLink) } catch { rmSync(nmLink, { recursive: true, force: true }) }
   }
+  symlinkSync(join(PKG_ROOT, 'node_modules'), nmLink, 'dir')
+  const nmLinkCreated = true
 
   console.log(`Building ${mdDir} → ${htmlDir}`)
   try {
