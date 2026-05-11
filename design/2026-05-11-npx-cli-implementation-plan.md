@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add an `npx`-able CLI (`mcp build <dir>`) that takes a directory of markdown files, moves them to `<dir>/md/`, builds a VitePress static site into `<dir>/html/`, and leaves no tooling artifacts behind.
+**Goal:** Add an `npx`-able CLI (`mkpress build <dir>`) that takes a directory of markdown files, moves them to `<dir>/md/`, builds a VitePress static site into `<dir>/html/`, and leaves no tooling artifacts behind.
 
-**Architecture:** A root-level `package.json` turns the cookiecutter repo into an npm package with a `bin` entry. A `.vitepress/` directory at the repo root (separate from the cookiecutter template) holds the CLI's VitePress config, components, plugins, and theme. The CLI (`bin/mcp.js`) sets `MCP_SRC_DIR` / `MCP_OUT_DIR` env vars and calls VitePress's programmatic `build()` API with the package root as the VitePress root; `outDir` and `srcDir` are resolved from env vars inside `config.ts`. VitePress's Vite cache is redirected to `/tmp` so no files are written to the npx cache directory.
+**Architecture:** A root-level `package.json` turns the cookiecutter repo into an npm package with a `bin` entry. A `.vitepress/` directory at the repo root (separate from the cookiecutter template) holds the CLI's VitePress config, components, plugins, and theme. The CLI (`bin/mkpress.js`) sets `MCP_SRC_DIR` / `MCP_OUT_DIR` env vars and calls VitePress's programmatic `build()` API with the package root as the VitePress root; `outDir` and `srcDir` are resolved from env vars inside `config.ts`. VitePress's Vite cache is redirected to `/tmp` so no files are written to the npx cache directory.
 
 **Tech Stack:** Node.js ≥ 18 (ESM), VitePress 1.x programmatic API, TypeScript (VitePress config only), Vue 3 (existing components), `node:test` + `node:assert` for tests.
 
@@ -15,7 +15,7 @@
 | Action | Path | Responsibility |
 |--------|------|----------------|
 | CREATE | `package.json` | Root npm package: `bin`, deps, `"type":"module"` |
-| CREATE | `bin/mcp.js` | CLI entry: parse args, move md files, set env vars, call `build()` |
+| CREATE | `bin/mkpress.js` | CLI entry: parse args, move md files, set env vars, call `build()` |
 | CREATE | `.vitepress/config.ts` | VitePress config reading `MCP_SRC_DIR` / `MCP_OUT_DIR` |
 | COPY→  | `.vitepress/components/` | From `{{cookiecutter.project_slug}}/docs/.vitepress/components/` |
 | COPY→  | `.vitepress/plugins/` | From `{{cookiecutter.project_slug}}/docs/.vitepress/plugins/` |
@@ -39,7 +39,7 @@
   "description": "CLI to build VitePress static sites from markdown directories",
   "type": "module",
   "bin": {
-    "mcp": "./bin/mcp.js"
+    "mkpress": "./bin/mkpress.js"
   },
   "files": [
     "bin/",
@@ -270,10 +270,10 @@ git commit -m "feat(cli): add VitePress config reading MCP_SRC_DIR/MCP_OUT_DIR"
 
 ---
 
-## Task 4: `bin/mcp.js` CLI entry point
+## Task 4: `bin/mkpress.js` CLI entry point
 
 **Files:**
-- Create: `bin/mcp.js`
+- Create: `bin/mkpress.js`
 
 - [ ] **Step 1: Write failing integration test**
 
@@ -292,7 +292,7 @@ test('mcp build moves md files and produces html/', async () => {
   writeFileSync(`${tmpDir}/index.md`, '# Test\nHello world')
   writeFileSync(`${tmpDir}/01-intro.md`, '# Introduction\nContent here')
 
-  execFileSync('node', [`${PKG_ROOT}/bin/mcp.js`, tmpDir], { stdio: 'inherit' })
+  execFileSync('node', [`${PKG_ROOT}/bin/mkpress.js`, tmpDir], { stdio: 'inherit' })
 
   assert.ok(existsSync(`${tmpDir}/md/index.md`), 'md/index.md should exist')
   assert.ok(existsSync(`${tmpDir}/md/01-intro.md`), 'md/01-intro.md should exist')
@@ -309,7 +309,7 @@ test('mcp build moves md files and produces html/', async () => {
 node --test test/cli.test.js
 ```
 
-Expected: FAIL — `bin/mcp.js` does not exist.
+Expected: FAIL — `bin/mkpress.js` does not exist.
 
 - [ ] **Step 3: Create `bin/` and write `mcp.js`**
 
@@ -376,7 +376,7 @@ main().catch(err => { console.error(err); process.exit(1) })
 - [ ] **Step 4: Make executable**
 
 ```bash
-chmod +x bin/mcp.js
+chmod +x bin/mkpress.js
 ```
 
 - [ ] **Step 5: Run integration test**
@@ -390,7 +390,7 @@ Expected: both tests PASS.
 - [ ] **Step 6: Smoke-test with real docs**
 
 ```bash
-node bin/mcp.js ~/Workspace/gst-maps-pipelines/docs/cube-storage
+node bin/mkpress.js ~/Workspace/gst-maps-pipelines/docs/cube-storage
 ```
 
 Expected:
@@ -401,7 +401,7 @@ Expected:
 - [ ] **Step 7: Commit**
 
 ```bash
-git add bin/mcp.js test/cli.test.js
+git add bin/mkpress.js test/cli.test.js
 git commit -m "feat(cli): add mcp build command"
 ```
 
@@ -425,9 +425,9 @@ test('mcp build is idempotent on already-initialized dir', async () => {
   writeFileSync(`${tmpDir}/md/01-page.md`, '# Page\nContent')
 
   // First run
-  execFileSync('node', [`${PKG_ROOT}/bin/mcp.js`, tmpDir], { stdio: 'inherit' })
+  execFileSync('node', [`${PKG_ROOT}/bin/mkpress.js`, tmpDir], { stdio: 'inherit' })
   // Second run — should not error
-  execFileSync('node', [`${PKG_ROOT}/bin/mcp.js`, tmpDir], { stdio: 'inherit' })
+  execFileSync('node', [`${PKG_ROOT}/bin/mkpress.js`, tmpDir], { stdio: 'inherit' })
 
   assert.ok(existsSync(`${tmpDir}/html/index.html`))
   assert.ok(!existsSync(`${tmpDir}/md/.vitepress`))
