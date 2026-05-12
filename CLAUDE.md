@@ -4,19 +4,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a **cookiecutter template repository** for markdown-chartpress - a professional documentation system with dual output formats:
-- **VitePress Site**: Interactive documentation with ECharts visualizations
-- **PDF Documents**: Professional exports with static chart images via Pandoc + XeLaTeX
+This repository serves **two purposes simultaneously**:
 
-**Important**: This repository contains the *template definition*, not a generated project. Generated projects live in `{{cookiecutter.project_slug}}/`.
+1. **npm CLI package** (`npx markdown-chartpress`) — `mkpress build <dir>` converts a directory of Markdown files into a VitePress static site with zero local installation. Entry point: `bin/mkpress.js`. VitePress config and shared Vue components live in `.vitepress/` at the repo root.
+
+2. **Cookiecutter template** — a full project scaffold for professional documentation with dual VitePress + PDF output. Template files live in `{{cookiecutter.project_slug}}/`.
+
+**Important**: The `{{cookiecutter.project_slug}}/` directory is the *template definition*, not a generated project. The root-level `.vitepress/`, `bin/`, `package.json`, and `test/` belong to the CLI package, not the template.
 
 ## Repository Structure
 
 ```
-markdown-chartpress/                      # Template repository (this repo)
+markdown-chartpress/                      # This repo (CLI package + cookiecutter template)
+├── package.json                          # npm package: bin/mkpress, deps, version
+├── bin/mkpress.js                        # CLI entry point (npx markdown-chartpress)
+├── .vitepress/                           # VitePress config + shared components (CLI)
+│   ├── config.ts                         # Reads MCP_SRC_DIR / MCP_OUT_DIR env vars
+│   ├── components/                       # EChart.vue, Mermaid.vue, etc.
+│   ├── plugins/                          # echarts-plugin.ts, mermaid-plugin.ts
+│   └── theme/                            # index.ts, style.css, PdfDownloadButton.vue
+├── test/cli.test.js                      # Integration tests for mkpress CLI
 ├── cookiecutter.json                     # Template configuration and variables
 ├── hooks/post_gen_project.py             # Post-generation cleanup script
-├── {{cookiecutter.project_slug}}/        # Template directory (what users get)
+├── {{cookiecutter.project_slug}}/        # Cookiecutter template directory
 │   ├── .github/workflows/*.jinja         # Templated CI/CD files
 │   ├── .gitlab-ci.yml.jinja
 │   ├── docs/                             # Documentation content
@@ -26,8 +36,8 @@ markdown-chartpress/                      # Template repository (this repo)
 │   ├── scripts/                          # Chart extraction/rendering
 │   ├── templates/                        # LaTeX templates with {{PLACEHOLDERS}}
 │   ├── Makefile                          # Build orchestration
-│   └── package.json                      # Node dependencies
-├── README.md                             # User-facing template documentation
+│   └── package.json                      # Node dependencies (separate from root)
+├── README.md                             # User-facing documentation
 └── design/                               # Design documents and historical context
 ```
 
@@ -314,6 +324,16 @@ Processed by `make process-templates` with sed substitution in generated project
 
 ## Testing Checklist
 
+### CLI package
+
+Before releasing CLI changes:
+
+- [ ] `npm test` passes (all 3 integration tests)
+- [ ] `npx . build <dir>` works end-to-end on a real directory
+- [ ] Idempotency: running build twice on same directory succeeds
+
+### Cookiecutter template
+
 Before releasing template changes:
 
 - [ ] Generate with all `publishing_platform` options
@@ -329,11 +349,14 @@ Before releasing template changes:
 
 ## Notes for AI Assistants
 
-- This is a **cookiecutter template repository** - the actual project files are in `{{cookiecutter.project_slug}}/`
+- This repo has **two roles**: npm CLI package (`bin/mkpress.js`) and cookiecutter template (`{{cookiecutter.project_slug}}/`)
+- Root-level `.vitepress/`, `bin/`, `test/`, `package.json` belong to the **CLI package** — not the template
+- `{{cookiecutter.project_slug}}/docs/.vitepress/` is the **template's** VitePress config — separate from the root one
 - Files ending in `.jinja` use Jinja2 syntax and get renamed during generation
 - The post-generation hook (`hooks/post_gen_project.py`) modifies the generated project
 - Variables from `cookiecutter.json` are available as `{{cookiecutter.var_name}}`
-- Testing requires generating projects with `cookiecutter` command
+- Testing the CLI: `npm test` runs `test/cli.test.js` (integration tests, build a real VitePress site in /tmp)
+- Testing the template: requires generating projects with `cookiecutter` command
 - Makefile in template uses `{{PLACEHOLDER}}` syntax (sed substitution, not Jinja2)
 - VitePress config uses Node.js fs/path modules (runs server-side, not browser)
 - Chart extraction uses MD5 hashing for auto-IDs (crypto library)
