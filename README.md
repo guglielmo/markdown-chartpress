@@ -1,51 +1,51 @@
 # markdown-chartpress
 
-> Professional documentation with VitePress (interactive charts) and PDF generation — available as a **cookiecutter template** or a **zero-install `npx` CLI**.
+> Turn Markdown into beautiful, browsable documentation — with interactive charts, PDF export, and built-in publishing.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![npm](https://img.shields.io/npm/v/markdown-chartpress)](https://www.npmjs.com/package/markdown-chartpress)
 [![Cookiecutter](https://img.shields.io/badge/cookiecutter-template-blue)](https://github.com/cookiecutter/cookiecutter)
 
-## Features
+---
 
-- **Interactive Charts** — ECharts visualizations in ` ```echarts ` blocks
-- **Professional PDFs** — Pandoc + XeLaTeX generation
-- **Live Development** — VitePress dev server with hot reload
-- **Auto-Numbering** — Chapter numbers from filenames (`01-intro.md` → "1. Introduction")
-- **Built-in Publishing** — GitLab Pages & GitHub Pages support
-- **Configurable** — Customize branding, colors, starter content
+## Which tool do you need?
+
+| | Use case | Tool |
+|---|---|---|
+| **A** | You have a folder of `.md` files and want to browse them as a static site | [`mkpress` CLI](#use-case-a-browse-existing-markdown-as-a-static-site) |
+| **B** | You're starting a new documentation project and want the full setup (PDF, CI/CD, branding) | [Cookiecutter template](#use-case-b-start-a-full-documentation-project-from-scratch) |
 
 ---
 
-## Option A: `npx` CLI (quickest start)
+## Use case A: Browse existing Markdown as a static site
 
-Turn any directory of Markdown files into a VitePress static site — no installation needed.
+You have a directory of Markdown files — meeting notes, a report, a knowledge base — and want to turn it into a navigable VitePress site in seconds.
+
+### Install
+
+**No installation (recommended for one-off use):**
 
 ```bash
 npx markdown-chartpress build ./my-docs
 ```
 
-What it does:
-1. Moves your `.md` files into `my-docs/md/`
-2. Auto-generates an `index.md` home page (if missing)
-3. Builds a VitePress site into `my-docs/html/`
-4. Leaves no tooling artifacts behind
-
-### Requirements
-
-- Node.js 18+
-
-### Usage
+**Global install (recommended for frequent use):**
 
 ```bash
-# Build once
-npx markdown-chartpress build ./path/to/docs
-
-# Example: build the current directory
-npx markdown-chartpress build .
+npm install -g markdown-chartpress
+mkpress build ./my-docs
 ```
 
-The CLI is **idempotent** — running it again on an already-initialized directory is safe.
+### How it works
+
+Running `mkpress build <dir>`:
+
+1. Moves your `.md` files into `<dir>/md/`
+2. Auto-generates a home page `index.md` (if missing)
+3. Builds a VitePress static site into `<dir>/html/`
+4. Cleans up all tooling artifacts — only your content remains
+
+The command is **idempotent**: running it again on an already-initialized directory is safe.
 
 ### Supported Markdown features
 
@@ -54,42 +54,41 @@ The CLI is **idempotent** — running it again on an already-initialized directo
 - Task lists (`- [ ]` / `- [x]`)
 - All standard VitePress / Markdown-it extensions
 
+### Requirements
+
+- Node.js 18+
+
 ---
 
-## Option B: Cookiecutter template (full project scaffold)
+## Use case B: Start a full documentation project from scratch
 
-For teams that want the complete setup: dual VitePress + PDF pipeline, CI/CD, branding, and PDF download button.
+You're building a professional documentation site — a technical report, product docs, a company handbook — and need the complete setup: interactive charts, PDF export, CI/CD pipelines, branding, and a "Download PDF" button.
 
-### Prerequisites
+### What you get
 
-- Node.js 18+, Python 3.8+
-- Make, Pandoc, XeLaTeX
-- Docker (optional, for chart rendering)
+- VitePress site with interactive ECharts and Mermaid charts
+- PDF generation with static chart images (Puppeteer → Pandoc + XeLaTeX)
+- Auto-configured CI/CD for GitLab Pages or GitHub Pages
+- Optional "Download PDF" button
+- Starter content (full example / minimal / empty)
+- Auto-numbered chapters from filenames (`01-intro.md` → "1. Introduction")
 
-### Quick Start
+### Quick start
 
 ```bash
 # Install cookiecutter
 pip install cookiecutter
 
-# Generate project
+# Generate your project
 cookiecutter gh:guglielmo/markdown-chartpress
 
-# Start working
+# Enter the generated project and start writing
 cd your-project-name
 npm install
 make dev
 ```
 
-### What You Get
-
-- VitePress site with interactive ECharts and Mermaid charts
-- PDF generation with static chart images (via Puppeteer + Pandoc)
-- Auto-configured CI/CD for GitLab Pages or GitHub Pages
-- Optional "Download PDF" button
-- Starter content (full example / minimal / empty)
-
-### Template Options
+### Template options
 
 | Variable | Choices | Default |
 |---|---|---|
@@ -99,11 +98,25 @@ make dev
 | `chart_format` | `svg`, `png` | `svg` |
 | `initialize_git` | `yes`, `no` | `yes` |
 
+### Prerequisites
+
+- Node.js 18+, Python 3.8+
+- Make, Pandoc, XeLaTeX
+- Docker (optional, for chart rendering)
+
 ---
 
 ## Architecture
 
-### Dual-Output Pipeline (template projects)
+### mkpress CLI
+
+```
+<dir>/*.md  →  mkpress build  →  <dir>/html/  (VitePress static site)
+```
+
+Internally: sets `MCP_SRC_DIR` / `MCP_OUT_DIR` env vars and calls VitePress's programmatic `build()` API. Vite cache goes to `/tmp` — nothing is written to the npx cache directory.
+
+### Cookiecutter template (dual-output pipeline)
 
 **VitePress flow:**
 ```
@@ -114,10 +127,6 @@ markdown (```echarts blocks) → VitePress + Vue + ECharts → interactive site
 ```
 markdown → extract charts → Puppeteer render → Pandoc + XeLaTeX → PDF
 ```
-
-### npx CLI internals
-
-The CLI sets `MCP_SRC_DIR` / `MCP_OUT_DIR` environment variables and calls VitePress's programmatic `build()` API with the package root as the VitePress root. Vite cache is redirected to `/tmp` — nothing is written to the npx cache directory.
 
 ---
 
